@@ -38,7 +38,7 @@
       }
     } else {
       if not was_prefix {
-        sep
+        separator
       }
 
       if type(unit) == dictionary and unit.at("weak", default: none) != none {
