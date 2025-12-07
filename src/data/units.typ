@@ -1,18 +1,16 @@
-#let currency = {
-  (
-    ("bitcoin", $bitcoin$),
-    ("dollar", $dollar$),
-    ("euro", $euro$),
-    ("franc", $#symbol("₣")$),
-    ("lira", $lira$),
-    ("peso", $peso$),
-    ("pound", $pound$),
-    ("ruble", $ruble$),
-    ("rupee", $rupee$),
-    ("won", $won$),
-    ("yen", $yen$),
-  ).to-dict()
-}
+#let currency = (
+  bitcoin: $bitcoin$,
+  dollar: $dollar$,
+  euro: $euro$,
+  franc: $#symbol("₣")$,
+  lira: $lira$,
+  peso: $peso$,
+  pound: $pound$,
+  ruble: $ruble$,
+  rupee: $rupee$,
+  won: $won$,
+  yen: $yen$,
+)
 
 #let units = {
   (

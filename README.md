@@ -26,7 +26,7 @@ Made for stuff like this:
   [
     #unit(10, "euro")\
     #unit(30, "celsius")\
-    $approx #unit(80, "percent")$\
+    $approx unit(80, "percent")$\
     #unit(1, "centi meter squared")
   ],
 )
@@ -40,7 +40,3 @@ But, thanks to zero, we can also do this:
 ```
 
 ![complex](complex.svg)
-
----
-
-`src/data/` was adapted from [`unify`](https://typst.app/universe/package/unify) c:

@@ -1,10 +1,10 @@
 // we can't just warn, so we abuse an existing warning with our own data
 #let _warn(body) = {
-  let quantity-not-found = [#(label(body))]
+  let unknown-quantity = [#(label(body))]
 }
 
 #let db() = {
-  import "data/units.typ": units, currency
+  import "data/units.typ": currency, units
   import "data/fix.typ": prefixes, suffixes
 
   (units + currency, prefixes, suffixes)
