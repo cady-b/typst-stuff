@@ -24,7 +24,8 @@ Made for stuff like this:
     #unit(10, "euro")\
     #unit(30, "degree celsius")\
     $approx unit(80, "percent")$\
-    #unit(1, "centi meter squared")
+    #unit(1, "centi meter squared")\
+    #unit(20, "meter second reciprocal-squared")
   ],
 )
 ```

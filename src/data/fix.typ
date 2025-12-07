@@ -36,4 +36,7 @@
 #let suffixes = (
   squared: $""^2$,
   cubed: $""^3$,
+  reciprocal: $""^(-1)$,
+  reciprocal-squared: $""^(-2)$,
+  reciprocal-cubed: $""^(-3)$,
 )
