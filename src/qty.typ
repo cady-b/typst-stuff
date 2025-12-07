@@ -10,7 +10,7 @@
   (units + currency, prefixes, suffixes)
 }
 
-#let qty(body, sep: sym.space.sixth) = {
+#let qty(body, separator: sym.space.sixth) = {
   let (db, prefixes, suffixes) = db()
 
   let was_prefix = true
@@ -31,7 +31,7 @@
         }
       } else {
         if not was_prefix {
-          sep
+          separator
         }
         was_prefix = true
         prefix
