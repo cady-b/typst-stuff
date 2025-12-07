@@ -2,13 +2,10 @@ Thin, opinionated wrapper around [`zero`](https://typst.app/universe/package/zer
 
 Made for stuff like this:
 ```typ
-#set page(height: auto, width: auto, margin: .4cm)
 #import "@local/null:0.1.0": *
-
 #table(columns: 4, align: center+horizon, gutter: 1em,
   [
-    #zero.set-num(group: (size: 3))
-    #value(500000000)\
+    #value(group: (size: 3), 500000000)\
     #qty("milli litre")
   ],
   [
