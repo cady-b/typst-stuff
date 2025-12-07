@@ -35,7 +35,7 @@
     (("gram", "gramme"), $upright("g")$),
     (("ton", "tonne"), $upright("t")$),
     ("dalton", $upright("Da")$),
-    (("atomicmass","unifiedatomicmassunit"), $upright("u")$),
+    (("atomicmass", "unifiedatomicmassunit"), $upright("u")$),
     ("newton", $upright("N")$),
     ("dyne", $upright("dyn")$),
     ("pascal", $upright("Pa")$),
