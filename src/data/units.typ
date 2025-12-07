@@ -1,5 +1,4 @@
 #let currency = (
-  bitcoin: $bitcoin$,
   dollar: $dollar$,
   euro: $euro$,
   franc: $#symbol("₣")$,
