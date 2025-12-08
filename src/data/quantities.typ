@@ -11,7 +11,7 @@
   yen: $yen$,
 )
 
-#let units = {
+#let quantities = {
   (
     (("meter", "metre"), $upright("m")$),
     ("lightyear", $upright("ly")$),

@@ -5,27 +5,28 @@ Made for stuff like this:
 #import "@local/null:0.1.0": *
 #table(columns: 4, align: center+horizon, gutter: 1em,
   [
-    #value(group: (size: 3), 500000000)\
-    #qty("milli litre")
+    #value(group: (separator: "."), 500000000)
+
+    #unit("milli litre")
   ],
   [
-    #unit(1, "second")\
-    #unit(20, "minute")\
-    #unit(3.5, "hour")
+    #qty(1, "second")\
+    #qty(20, "minute")\
+    #qty(3.5, "hour")
   ],
   [
-    #unit(6, "metre")\
-    #unit(50, "milli gram")\
-    #unit(5, "kilo gramme")\
-    #unit(2, "liter")\
-    #unit(25, "hertz")\
+    #qty(6, "metre")\
+    #qty(50, "milli gram")\
+    #qty(5, "kilo gramme")\
+    #qty(2, "liter")\
+    #qty(25, "hertz")
   ],
   [
-    #unit(10, "euro")\
-    #unit(30, "degree celsius")\
-    $approx unit(80, "percent")$\
-    #unit(1, "centi meter squared")\
-    #unit(20, "meter second reciprocal-squared")
+    #qty(10, "euro")\
+    #qty(30, "degree celsius")\
+    $approx qty(80, "percent")$\
+    #qty(1, "centi meter squared")\
+    #qty(20, "meter second reciprocal-squared")
   ],
 )
 ```
@@ -34,7 +35,7 @@ Made for stuff like this:
 
 But, thanks to zero, we can also do this:
 ```typ
-#unit("2.25+.1-.2e-4", "micro second metre hecto gram squared")
+#qty("2.25+.1-.2e-4", "micro second metre hecto gram squared")
 ```
 
 ![complex](complex.svg)

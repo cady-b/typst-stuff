@@ -4,13 +4,13 @@
 }
 
 #let db() = {
-  import "data/units.typ": currency, units
+  import "data/quantities.typ": currency, quantities
   import "data/fix.typ": prefixes, suffixes
 
-  (units + currency, prefixes, suffixes)
+  (quantities + currency, prefixes, suffixes)
 }
 
-#let qty(body, separator: sym.space.sixth) = {
+#let unit(body, separator: sym.space.sixth) = {
   let (db, prefixes, suffixes) = db()
 
   let was_prefix = true
