@@ -2,13 +2,13 @@
   import "@preview/zero:0.5.0" as zero
 
   let _value = zero.num
-  import "unit.typ": unit as _unit
+  import "unit.typ": unit
 
-  let _qty(value, qty, separator: sym.space.thin, unit-separator: auto, ..arg) = math.equation({
+  let qty(value, qty, separator: sym.space.thin, unit-separator: auto, ..arg) = math.equation({
     _value(value, ..arg)
     separator
-    _unit(qty, ..if unit-separator != auto { (separator: unit-separator) })
+    unit(qty, ..if unit-separator != auto { (separator: unit-separator) })
   })
 
-  (_value, _unit, _qty, zero)
+  (_value, unit, qty, zero)
 }
