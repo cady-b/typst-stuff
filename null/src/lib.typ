@@ -1,14 +1,43 @@
 #let (value, unit, qty, zero) = {
   import "@preview/zero:0.5.0" as zero
-
-  let _value = zero.num
   import "unit.typ": unit
 
-  let qty(value, qty, separator: sym.space.thin, unit-separator: auto, ..arg) = math.equation({
-    _value(value, ..arg)
+  let value-alt(alt, value) = {
+    if type(alt) == str { return alt; }
+
+    let alt = ""
+    if type(value) == str { alt += value }
+    else if type(value) in (int, float, decimal) { alt += str(value) }
+    else if type(value) == content {
+      if value.has("text") { alt += value.text }
+      else { let unable-to-produce-alt-text-from = [#(label(repr(value) + " " + repr(value.fields())))] }
+    } else {
+      let unable-to-produce-alt-text-from = [#(label(repr(value)))]
+    }
+
+    alt
+  }
+  let qty-alt(alt, value, qty) = {
+    if type(alt) == str { return alt; }
+
+    let alt = value-alt(alt, value)
+    alt += " "
+    if type(qty) == str { alt += qty }
+    else if type(qty) == function and type(qty()) == str { alt += qty() }
+    else {
+      let unable-to-produce-alt-text-from = [#(label(repr(qty)))]
+    }
+
+    alt
+  }
+
+  let value(alt: none, number, ..args) = math.equation(alt: value-alt(alt, number), zero.num(number, ..args))
+
+  let qty(alt: none, value, qty, separator: sym.space.narrow.nobreak, unit-separator: auto, ..arg) = math.equation(alt: qty-alt(alt, value, qty), {
+    zero.num(value, ..arg)
     separator
     unit(qty, ..if unit-separator != auto { (separator: unit-separator) })
   })
 
-  (_value, unit, qty, zero)
+  (value, unit, qty, zero)
 }
