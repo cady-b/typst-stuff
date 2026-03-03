@@ -15,11 +15,11 @@ Made for stuff like this:
     #qty(3.5, "hour")
   ],
   [
-    #qty(6, "metre")\
+    #qty(6, "kilo metre")\
     #qty(50, "milli gram")\
-    #qty(5, "kilo gramme")\
-    #qty(2, "liter")\
-    #qty(25, "hertz")
+    #qty(25, "hertz")\
+    #qty(1, "nano mole per liter")\
+    #qty(207, "pico gram per milli litre")\
   ],
   [
     #qty(10, "euro")\
@@ -35,7 +35,7 @@ Made for stuff like this:
 
 But, thanks to zero, we can also do this:
 ```typ
-#qty("2.25+.1-.2e-4", "micro second metre hecto gram squared")
+#qty("2.25+.1-.2e-4", "micro second metre per hecto gram squared")
 ```
 
 ![complex](complex.svg)
