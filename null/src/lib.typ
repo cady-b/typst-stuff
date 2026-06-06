@@ -2,6 +2,7 @@
   import "@preview/zero:0.5.0" as zero
   import "unit.typ": unit
 
+  // generate alt text for values
   let value-alt(alt, value) = {
     if type(alt) == str { return alt; }
 
@@ -17,6 +18,8 @@
 
     alt
   }
+ 
+  // generate alt text for quantities
   let qty-alt(alt, value, qty) = {
     if type(alt) == str { return alt; }
 
@@ -31,6 +34,10 @@
     alt
   }
 
+  // --------------
+  // | main funcs |
+  // --------------
+
   let value(alt: none, number, ..args) = math.equation(alt: value-alt(alt, number), zero.num(number, ..args))
 
   let qty(alt: none, value, qty, separator: sym.space.narrow.nobreak, unit-separator: auto, ..arg) = math.equation(alt: qty-alt(alt, value, qty), {
@@ -39,5 +46,6 @@
     unit(qty, ..if unit-separator != auto { (separator: unit-separator) })
   })
 
+  // export
   (value, unit, qty, zero)
 }

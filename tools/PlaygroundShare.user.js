@@ -12,7 +12,7 @@
 (function() {
   'use strict';
 
-  const shareParam = "state";
+  const shareParam = "s";
   const shareLink = `https://typst.app/play?${shareParam}=`
   const editorQuery = "#app-root .cm-editor .cm-content";
 
@@ -21,7 +21,7 @@
 
   const editorHook = (editor) => {
     // guard against duplicate calls
-    if (foundEditor === true) { return; }
+    if (foundEditor) { return; }
     foundEditor = true;
 
     let share = new URLSearchParams(window.location.search).get(shareParam);
@@ -44,11 +44,10 @@
     // early return if decoding failed
     if (!dbody) { return; }
 
-    // inject body
+    // --- inject body ---
 
     let last = "";
     let stable = 0;
-
     const finishLoading = () => {
       // await the "editable" signal
       if (editor.getAttribute("contenteditable") !== "true") { return requestAnimationFrame(finishLoading); }
@@ -69,8 +68,8 @@
 
   const shareHook = (share) => {
     // Overwrite the onclick event with a handler that encodes the editor state
-    share.onclick = (event) => {
-      event.stopImmediatePropagation();
+    share.onclick = (ev) => {
+      ev.stopImmediatePropagation();
 
       let editor = document.querySelector(editorQuery);
       GM_setClipboard(shareLink + btoa(editor.innerText));
@@ -84,12 +83,12 @@
 
         if (!foundEditor) {
           const editor = node.matches?.(editorQuery) ? node : node.querySelector(editorQuery);
-          if (editor) { editorHook(editor) }
+          editor ? editorHook(editor);
         }
 
         // Find the share button (sadly we have to keep the observer running because of dynamic rendering shenanigans)
         const share = node.querySelectorAll("div[role=toolbar] button")?.values().find(v => v.innerText == "Share");
-        if (share) { shareHook(share) }
+        share ? shareHook(share);
       }
     }
   })
