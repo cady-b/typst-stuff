@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Liara's Typst-Stuff</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="favicon.png" rel="icon">
+  </head>
+  <body>
+    <div style="margin-bottom: var(--s0);">Occasionally I may build things around <a href="https://typst.app/open-source" target="_blank">Typst</a>, a silly piece of (<em>quite</em> awesome) software. It's nice to have a place for that here, I think.</div>
+
+
+    <h1>Packages</h1>
+ 
+    <h2 postfix="(not on universe)"><a href="https://github.com/cady-b/typst-stuff/tree/main/null" target="_blank">null</a></h2>
+    <p>A thin, opinionated wrapper around <a href="https://typst.app/universe/package/zero" target="_blank">zero</a>, providing some functionality from the now unmaintained <a href="https://typst.app/universe/package/metro" target="_blank">metro</a> package that I miss; because <code>zero.zi</code> alone wasn't quite the interface I want for my documents.</p>
+
+
+    <h1>Contributions to the Typst project</h1>
+
+    <h2><a href="https://github.com/typst/typst/pull/7423" target="_blank">#7423</a>: Improve the font features interface</h2>
+    <p>My first PR to <code>typst/typst</code>; niche spec compliance stuff I was nerd-sniped into by a user doing work with <a href="https://en.wikipedia.org/wiki/Znamenny_chant" target="_blan">Znamenny Notation</a>, which has a <a href="https://github.com/slavonic/Mezenets" target="_blank">pretty cool font</a> that exposed a missing knob in Typst. More interesting (to me) than changing the type of a property however was discovering that pretty much no validation was done on raw OpenType features; I had a ton of fun remedying that handling all the weirdness of Unicode and OT while trying to report as nice errors as possible to end-users c:</p>
+    <p>I learned a lot about Typst, notably the diagnostics model and how elements are build. Beyond that, it was good practice of test coverage, correctness, and communication! This was the first time I had to pass a professional code review, which was a pretty interesting experience by itself; I'm very thankful to Laurenz for his patience and guidance with stylistic and technical considerations.</p>
+
+    <h2><a href="https://github.com/typst/typst/pull/7528" target="_blank">#7528</a>: Friendly hint and docs clarification for <code>array.sorted</code></h2>
+    <p>This one was quite silly: mere hours before the 0.14.1 release, a PR was crated and merged that changed the sorting algorithm to a more resilient one. The change was good on a technical level, but had the unfortunate side-effect of exposing some previously invisible issues in user code as a hard error. I noticed after upgrading and trying to compile my diary, which happened to be affected; despite the error pointing right to the bad line, it was still a quite pain to figure out why I was suddenly seeing bad values (spoiler: they were always there). Later it turned out other users also experienced this issue, most notably through the <a href="https://github.com/swaits-typst-packages/glossy/issues/16" target="_blank">glossy</a> package.</p>
+    <p>The PR isn't very interesting on a technical level, but triaging and figuring out how best to handle this new situation was an intense experience. I'm quite happy with the result, and since had positive experiences in the support channels helping newer users resolve the hint they were now seeing. More recently, Laurenz talked talked about this (among other considerations) in defining and improving the long-term stability of Typst and its ecosystem on his blog: <a href="https://laurmaedje.github.io/posts/evolving-typst" target="_blank">https://laurmaedje.github.io/posts/evolving-typst</a></p>
+
+
+    <div id="source-link">
+      <map name="gh-icon">
+        <area
+          shape="circle"
+          coords="16,16,16"
+          href="https://github.com/cady-b/typst-stuff"
+          target="_blank"
+          alt="GitHub Logo"
+        />
+      </map>
+      <img usemap="#gh-icon" class="darkmode-invert" src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTYiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik04IDBDMy41OCAwIDAgMy41OCAwIDhjMCAzLjU0IDIuMjkgNi41MyA1LjQ3IDcuNTkuNC4wNy41NS0uMTcuNTUtLjM4IDAtLjE5LS4wMS0uODItLjAxLTEuNDktMi4wMS4zNy0yLjUzLS40OS0yLjY5LS45NC0uMDktLjIzLS40OC0uOTQtLjgyLTEuMTMtLjI4LS4xNS0uNjgtLjUyLS4wMS0uNTMuNjMtLjAxIDEuMDguNTggMS4yMy44Mi43MiAxLjIxIDEuODcuODcgMi4zMy42Ni4wNy0uNTIuMjgtLjg3LjUxLTEuMDctMS43OC0uMi0zLjY0LS44OS0zLjY0LTMuOTUgMC0uODcuMzEtMS41OS44Mi0yLjE1LS4wOC0uMi0uMzYtMS4wMi4wOC0yLjEyIDAgMCAuNjctLjIxIDIuMi44Mi42NC0uMTggMS4zMi0uMjcgMi0uMjcuNjggMCAxLjM2LjA5IDIgLjI3IDEuNTMtMS4wNCAyLjItLjgyIDIuMi0uODIuNDQgMS4xLjE2IDEuOTIuMDggMi4xMi41MS41Ni44MiAxLjI3LjgyIDIuMTUgMCAzLjA3LTEuODcgMy43NS0zLjY1IDMuOTUuMjkuMjUuNTQuNzMuNTQgMS40OCAwIDEuMDctLjAxIDEuOTMtLjAxIDIuMiAwIC4yMS4xNS40Ni41NS4zOEE4LjAxMiA4LjAxMiAwIDAgMCAxNiA4YzAtNC40Mi0zLjU4LTgtOC04eiI+PC9wYXRoPjwvc3ZnPgo=">
+    </div>
+  </body>
+</html>
