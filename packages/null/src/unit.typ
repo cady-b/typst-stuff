@@ -3,15 +3,17 @@
   let unknown-quantity = [#(label(body))]
 }
 
-#let db() = {
+#let db(extra) = {
   import "data/quantities.typ": currency, quantities
   import "data/fix.typ": prefixes, suffixes
 
-  (quantities + currency, prefixes, suffixes)
+  let (extra-db, extra-prefixes, extra-suffixes) = extra;
+
+  (currency + quantities + extra-db, prefixes + extra-prefixes, suffixes + extra-suffixes)
 }
 
-#let resolve(part, was_prefix, separator) = {
-  let (db, prefixes, suffixes) = db()
+#let resolve(db: none, part, was_prefix, separator) = {
+  let (db, prefixes, suffixes) = db;
   let unit = db.at(part, default: none)
   let prefix = prefixes.at(part, default: none)
   let suffix = suffixes.at(part, default: none)
@@ -41,13 +43,10 @@
   return (was_prefix, none)
 }
 
-#let unit(body, separator: sym.space.sixth) = {
-  let (db, prefixes, suffixes) = db()
+#let _unit(db-extra, body, separator) = {
+  if type(body) == function { return body(); }
 
-
-  if type(body) == function {
-    return (body)()
-  }
+  let resolve = resolve.with(db: db(db-extra))
 
   let was_prefix = true
   for part in body.split(regex("\s")) {

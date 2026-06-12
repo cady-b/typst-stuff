@@ -23,6 +23,7 @@
   yotta: $upright("Y")$,
   ronna: $upright("R")$,
   quetta: $upright("Q")$,
+
   kibi: $upright("Ki")$,
   mebi: $upright("Mi")$,
   gibi: $upright("Gi")$,

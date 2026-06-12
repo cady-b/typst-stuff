@@ -39,3 +39,9 @@ But, thanks to zero, we can also do this:
 ```
 
 ![complex](complex.svg)
+
+You may also register your own extensions; simply call `with-db(...)` to recieve your custom `unit` & `qty`!
+```typ
+#let (unit, qty) = with-db(db: (foo: text(red, [foo]), lorem: lorem(2)), suffixes: (buzz: $""^"buzz"$))
+#qty(42, "micro foo buzz lorem")
+```
