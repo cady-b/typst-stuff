@@ -1,0 +1,22 @@
+[package]
+name = "typface"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+
+[profile.release]
+opt-level = 3
+debug = "none"
+strip = "symbols"
+incremental = false
+codegen-units = 1
+
+[profile.dev]
+opt-level = 1
+debug = true
+
+[dependencies]
+nix = { version = "0.31.3", features = ["process"] }
+serde = { version = "1", features = ["derive"] }
+toml = "1.1.2"
+unscanny = "0.1"
