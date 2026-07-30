@@ -44,7 +44,7 @@ fn scan_cache_version(buf: &[u8]) -> Option<TypstVersion> {
     let mut s = unscanny::Scanner::new(str::from_utf8(buf).ok()?);
 
     match s.eat() {
-        Some('r') => Some(TypstVersion::raw(s.after().to_string())),
+        Some('r') => Some(TypstVersion::new_raw(s.after().to_string())),
         Some('v') => {
             let (major, minor, patch) = TypstVersion::parse_triplet(&mut s).ok()?;
             Some(TypstVersion::new(major, minor, patch))
