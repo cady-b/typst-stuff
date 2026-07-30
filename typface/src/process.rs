@@ -36,7 +36,7 @@ pub fn call(
 
 pub fn resolve_env(config: &config::Opt, version: &TypstVersion) -> Vec<String> {
     // we don't care about the patch version
-    let check_ver = match version.get_prefix() {
+    let check_ver = match version.prefix() {
         VersionPrefix::Raw => version.to_owned(),
         VersionPrefix::Versioned => TypstVersion::new(version.major, version.minor, 0),
     };
@@ -50,7 +50,7 @@ pub fn resolve_env(config: &config::Opt, version: &TypstVersion) -> Vec<String> 
                 split.next().and_then(|v| v.parse::<u32>().ok()),
             ) {
                 (Some(major), Some(minor)) => TypstVersion::new(major, minor, 0),
-                _ => TypstVersion::raw(v.to_owned()),
+                _ => TypstVersion::new_raw(v.to_owned()),
             };
 
             (v, o)

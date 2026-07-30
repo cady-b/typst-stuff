@@ -31,7 +31,7 @@ pub fn rediscover_binaries(options: config::Discover) {
     // Verify output actually looks like typst and extract version information
     let typsts = executables.flat_map(|v| v.canonicalize()).flat_map(|exec| {
         let version = match overwrites.get(&exec) {
-            Some(&v) => Some(TypstVersion::raw(v.to_owned())),
+            Some(&v) => Some(TypstVersion::new_raw(v.to_owned())),
             None => Command::new(&exec)
                 .arg("--version")
                 .output()
@@ -58,7 +58,7 @@ pub fn rediscover_binaries(options: config::Discover) {
 
     // Write cache
     for (path, version) in typsts {
-        write!(f, "{}{}", version.get_prefix(), version.get_string()).unwrap();
+        write!(f, "{}{}", version.prefix(), version.stringify()).unwrap();
         f.write(&[0]).unwrap();
         write!(f, "{}", path.to_string_lossy()).unwrap();
         f.write(&[0]).unwrap();
@@ -84,6 +84,7 @@ fn typst_cli_version(value: &str) -> Result<TypstVersion, Box<dyn std::error::Er
     if !s.eat_if("typst") {
         Err("Not Typst")?;
     }
+
     let _ = s.eat_whitespace();
 
     let (major, minor, patch) = TypstVersion::parse_triplet(&mut s)?;

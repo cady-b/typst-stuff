@@ -56,7 +56,7 @@ pub struct TypstVersion {
 impl PartialEq for TypstVersion {
     fn eq(&self, other: &Self) -> bool {
         if self.raw == None && other.raw == None {
-            self.major == other.major && self.minor == other.minor && self.patch == other.patch
+            self.triplet() == other.triplet()
         } else {
             match (&self.raw, &other.raw) {
                 (Some(a), Some(b)) if a == b => true,
@@ -68,14 +68,12 @@ impl PartialEq for TypstVersion {
 
 impl Hash for TypstVersion {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        match self.get_prefix() {
+        match self.prefix() {
             VersionPrefix::Raw => {
                 self.raw.hash(state);
             }
             VersionPrefix::Versioned => {
-                self.major.hash(state);
-                self.minor.hash(state);
-                self.patch.hash(state);
+                self.triplet().hash(state);
             }
         }
     }
@@ -87,7 +85,7 @@ impl FromStr for TypstVersion {
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match Self::parse_triplet(&mut unscanny::Scanner::new(&value)) {
             Ok((major, minor, patch)) => Ok(Self::new(major, minor, patch)),
-            Err(_) => Ok(Self::raw(value.to_owned())),
+            Err(_) => Ok(Self::new_raw(value.to_owned())),
         }
     }
 }
@@ -103,7 +101,7 @@ impl TypstVersion {
         }
     }
 
-    pub fn raw(v: String) -> Self {
+    pub fn new_raw(v: String) -> Self {
         Self {
             major: 0,
             minor: 0,
@@ -113,14 +111,18 @@ impl TypstVersion {
         }
     }
 
-    pub fn get_prefix(&self) -> VersionPrefix {
+    pub fn prefix(&self) -> VersionPrefix {
         match self.raw {
             Some(_) => VersionPrefix::Raw,
             None => VersionPrefix::Versioned,
         }
     }
 
-    pub fn get_string(&self) -> String {
+    pub fn triplet(&self) -> (u32, u32, u32) {
+        (self.major, self.minor, self.patch)
+    }
+
+    pub fn stringify(&self) -> String {
         self.raw
             .to_owned()
             .unwrap_or_else(|| format!("{}.{}.{}", self.major, self.minor, self.patch))
