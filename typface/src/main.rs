@@ -3,19 +3,59 @@ mod config;
 mod process;
 
 use cache::{Cache, TypstVersion, VersionPrefix};
+use clap::Parser;
 use itertools::{Either, Itertools};
 use process::{call, resolve_env};
 
+#[derive(clap::Parser, Debug)]
+#[command(version)]
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
+    #[clap(flatten)]
+    remaining: Remaining,
+}
+
+#[derive(clap::Parser, Debug)]
+enum Commands {
+    #[command(name = "--", disable_help_subcommand = true, disable_help_flag = true)]
+    /// Forward all following arguments directly to Typst
+    Defer(Remaining),
+    /// Preview a specified file. Runs `watch`, writing output to `/tmp/` and opening it in the default viewer
+    Preview(Remaining),
+    /// Discover installed Typst binaries
+    Discover,
+    /// List discovered binaries
+    List,
+}
+
+#[derive(clap::Parser, Debug)]
+struct Remaining {
+    #[arg(allow_hyphen_values = true, num_args = 0..)]
+    /// Tries to parse the first as a version string (i.e. `0.15`, or `0.13.1`), forwards others to Typst
+    remaining: Vec<String>,
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut args = std::env::args().skip(1).peekable();
+    let args = Cli::parse();
 
     let cfg = config::get_conf()?;
-    let cache = std::cell::LazyCell::new(|| cache::read_cache());
+    let cache = std::cell::LazyCell::new(cache::read_cache);
 
-    if let Some(cmd) = args.peek() {
-        match cmd.as_str() {
-            "--version" => version(),
-            "--list" => {
+    //dbg!(&args);
+
+    if let Some(args) = args.command {
+        match args {
+            Commands::Defer(remaining) => {
+                let bin = cfg.default.canonicalize().unwrap();
+                let env = cache::lookup::version(&bin, &cache)
+                    .map(|v| resolve_env(&cfg.opt, &v))
+                    .unwrap_or_default();
+
+                call(bin, remaining.remaining, env)
+            }
+            Commands::Discover => cache::rediscover_binaries(cfg.discover),
+            Commands::List => {
                 // TODO: completions based on this
                 // Possibly fix the input file completions thing as well (only suggest .typ)?
 
@@ -27,7 +67,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         VersionPrefix::Versioned => Either::Right((b, v)),
                     });
 
-                if raw.len() > 0 {
+                if !raw.is_empty() {
                     println!("Named:");
                 }
                 let max_len = raw.iter().map(|(_, v)| v.len()).max().unwrap_or_default();
@@ -35,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("  {version:max_len$} ({bin})");
                 }
 
-                if versioned.len() > 0 {
+                if !versioned.is_empty() {
                     println!("\nVersioned:");
                 }
                 for (bin, version) in versioned
@@ -45,20 +85,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("  {} ({bin})", version.stringify());
                 }
             }
-            "--discover" => cache::rediscover_binaries(cfg.discover),
-            "--preview" => {
-                let _ = args.next(); // skip over `--preview`
+            Commands::Preview(maybe_version) => {
+                let mut args = maybe_version.remaining.into_iter().peekable();
 
-                let (bin, version) = if let Some((bin, version)) =
-                    args.peek().and_then(|s| match_version(s, &cache))
-                {
-                    let _ = args.next(); // skip the version
-                    (bin.into(), version)
-                } else {
-                    let bin = cfg.default.canonicalize().unwrap();
-                    let version = cache::lookup::version(&bin, &cache).unwrap();
+                let (bin, version) = match args.peek() {
+                    Some(s) if let Some((bin, version)) = match_version(s, &cache) => {
+                        let _ = args.next(); // skip the version
+                        (bin.into(), version)
+                    }
+                    _ => {
+                        let bin = cfg.default.canonicalize().unwrap();
+                        let version = cache::lookup::version(&bin, &cache).unwrap();
 
-                    (bin, version)
+                        (bin, version)
+                    }
                 };
 
                 let args = ["watch".to_owned()]
@@ -68,19 +108,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 call(bin, args, resolve_env(&cfg.opt, &version));
             }
-            "--" => {
-                let _ = args.next(); // skip over `--`
+        }
+    } else {
+        let mut args = args.remaining.remaining.into_iter().peekable();
 
-                let bin = cfg.default.canonicalize().unwrap();
-                let env = cache::lookup::version(&bin, &cache)
-                    .map(|v| resolve_env(&cfg.opt, &v))
-                    .unwrap_or_default();
-
-                call(bin, args, env)
-            }
-            s if let Some((bin, version)) = match_version(s, &cache) => {
+        let (bin, env) = match args.peek() {
+            Some(s) if let Some((bin, version)) = match_version(s, &cache) => {
                 let _ = args.next(); // skip over the version
-                call(bin, args, resolve_env(&cfg.opt, &version))
+                (bin.into(), resolve_env(&cfg.opt, &version))
             }
             _ => {
                 let bin = cfg.default.canonicalize().unwrap();
@@ -88,24 +123,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .map(|v| resolve_env(&cfg.opt, &v))
                     .unwrap_or_default();
 
-                call(bin, args, env)
+                (bin, env)
             }
-        }
+        };
+
+        call(bin, args, env)
     }
 
-    let file = std::env::current_dir().map(|v| v.join("typst.toml"));
+    //let file = std::env::current_dir().map(|v| v.join("typst.toml"));
 
     Ok(())
 }
 
-fn version() -> ! {
-    println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
-    std::process::exit(0);
-}
-
 fn match_version(s: &str, cache: &Cache) -> Option<(String, TypstVersion)> {
     cli_scan_version(s, cache).map(|version| {
-                if let Some(bin) = cache::lookup::binary(&version, &cache) {
+                if let Some(bin) = cache::lookup::binary(&version, cache) {
                     (bin, version)
                 } else {
                     eprintln!(
