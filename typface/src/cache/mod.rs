@@ -55,13 +55,10 @@ pub struct TypstVersion {
 
 impl PartialEq for TypstVersion {
     fn eq(&self, other: &Self) -> bool {
-        if self.raw == None && other.raw == None {
+        if self.raw.is_none() && other.raw.is_none() {
             self.triplet() == other.triplet()
         } else {
-            match (&self.raw, &other.raw) {
-                (Some(a), Some(b)) if a == b => true,
-                _ => false,
-            }
+            matches!((&self.raw, &other.raw), (Some(a), Some(b)) if a == b)
         }
     }
 }
@@ -83,7 +80,7 @@ impl FromStr for TypstVersion {
     type Err = std::convert::Infallible;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        match Self::parse_triplet(&mut unscanny::Scanner::new(&value)) {
+        match Self::parse_triplet(&mut unscanny::Scanner::new(value)) {
             Ok((major, minor, patch)) => Ok(Self::new(major, minor, patch)),
             Err(_) => Ok(Self::new_raw(value.to_owned())),
         }

@@ -21,7 +21,7 @@ pub fn rediscover_binaries(options: config::Discover) {
     // Find executables that "look like Typst"
     let executables = paths.flat_map(fs::read_dir).flat_map(|entries| {
         entries
-            .flat_map(std::convert::identity)
+            .flat_map(std::convert::identity) // TODO: check if we can use .flatten() instaed
             .filter_map(|entry| {
                 let path = entry.path();
                 may_be_typst(&path).then_some(path)
@@ -52,16 +52,17 @@ pub fn rediscover_binaries(options: config::Discover) {
         std::fs::OpenOptions::new()
             .write(true)
             .create(true)
+            .truncate(true)
             .open(&cache_file)
-            .expect(&format!("Unable to write cache to {cache_file}\n\n")),
+            .unwrap_or_else(|e| panic!("Unable to write cache to {cache_file}: {e}\n\n")),
     );
 
     // Write cache
     for (path, version) in typsts {
         write!(f, "{}{}", version.prefix(), version.stringify()).unwrap();
-        f.write(&[0]).unwrap();
+        f.write_all(&[0]).unwrap();
         write!(f, "{}", path.to_string_lossy()).unwrap();
-        f.write(&[0]).unwrap();
+        f.write_all(&[0]).unwrap();
     }
 
     f.flush().unwrap();
