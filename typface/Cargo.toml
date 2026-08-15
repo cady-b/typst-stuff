@@ -1,6 +1,6 @@
 [package]
 name = "typface"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -16,8 +16,9 @@ opt-level = 1
 debug = true
 
 [dependencies]
+clap = { version = "4.6", features = ["derive"] }
 itertools = "0.15.0"
 nix = { version = "0.31.3", features = ["process"] }
 serde = { version = "1", features = ["derive"] }
-toml = "1.1.2"
+toml = "1.1.4"
 unscanny = "0.1"

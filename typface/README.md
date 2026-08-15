@@ -1,6 +1,24 @@
-A minimal interface for working with multiple versions of Typst on Linux. Made for my personal use, it's far from production-ready and only works on Linux currently cuz that's what I have.
+A minimal wrapper for working with multiple versions of Typst on the same machine. Made for my personal use; it's far from production-ready and only works on Linux currently.
 
-Reads a config like this and runs Typst (optionally a specific version specified as the first argument) accordingly basically:
+```help
+Usage: typface [REMAINING]... [COMMAND]
+
+Commands:
+  --        Forward all following arguments directly to Typst
+  preview   Preview a specified file. Runs `watch`, writing output to `/tmp/` and opening it in the default viewer
+  discover  Discover installed Typst binaries
+  list      List discovered binaries
+  help      Print this message or the help of the given subcommand(s)
+
+Arguments:
+  [REMAINING]...  Tries to parse the first as a version string (i.e. `0.15`, or `0.13.1`), forwarding others to Typst
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+```
+
+Typst will be run according a configuration like this, from `~/.config/typface/config.toml`:
 ```toml
 default = "/usr/bin/typst"
 
@@ -17,5 +35,3 @@ env = { TYPST_FEATURES = "html,a11y-extras" }
 "/home/cady/.local/bin/typst-debug" = "debug"
 "/home/cady/.local/bin/typst-release" = "release"
 ```
-
-`typface --discover` discoveres installed Typst binaries, `typface --list` lists what's in the cache.
