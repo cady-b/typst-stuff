@@ -10,8 +10,8 @@ pub fn read_cache() -> Cache {
         std::fs::OpenOptions::new()
             .read(true)
             .open(&cache_file)
-            .expect(&format!(
-                "Unable to read cache from {cache_file}. Have you --discover your Typst binaries?\n\n"
+            .unwrap_or_else(|e| panic!(
+                "Unable to read cache from {cache_file}: {e}. Have you --discover your Typst binaries?\n\n"
             )),
     );
 
