@@ -1,3 +1,4 @@
+mod args;
 mod cache;
 mod config;
 mod process;
@@ -7,44 +8,15 @@ use clap::Parser;
 use itertools::{Either, Itertools};
 use process::{call, resolve_env};
 
-#[derive(clap::Parser, Debug)]
-#[command(version)]
-struct Cli {
-    #[command(subcommand)]
-    command: Option<Commands>,
-    #[clap(flatten)]
-    remaining: Remaining,
-}
-
-#[derive(clap::Parser, Debug)]
-enum Commands {
-    #[command(name = "--", disable_help_subcommand = true, disable_help_flag = true)]
-    /// Forward all following arguments directly to Typst
-    Defer(Remaining),
-    /// Preview a specified file. Runs `watch`, writing output to `/tmp/` and opening it in the default viewer
-    Preview(Remaining),
-    /// Discover installed Typst binaries
-    Discover,
-    /// List discovered binaries
-    List,
-}
-
-#[derive(clap::Parser, Debug)]
-struct Remaining {
-    #[arg(allow_hyphen_values = true, num_args = 0..)]
-    /// Tries to parse the first as a version string (i.e. `0.15`, or `0.13.1`), forwards others to Typst
-    remaining: Vec<String>,
-}
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = Cli::parse();
+    let args = args::Cli::parse();
 
     let cfg = config::get_conf()?;
     let cache = std::cell::LazyCell::new(cache::read_cache);
 
-    //dbg!(&args);
-
     if let Some(args) = args.command {
+        use args::Commands;
+
         match args {
             Commands::Defer(remaining) => {
                 let bin = cfg.default.canonicalize().unwrap();
@@ -56,8 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             Commands::Discover => cache::rediscover_binaries(cfg.discover),
             Commands::List => {
-                // TODO: completions based on this
-                // Possibly fix the input file completions thing as well (only suggest .typ)?
+                // TODO: restrict file-completions to .typ)?
 
                 println!("Default: {}\n", cfg.default.display());
 
