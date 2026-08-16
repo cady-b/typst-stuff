@@ -6,8 +6,8 @@ Usage: typface [REMAINING]... [COMMAND]
 Commands:
   --        Forward all following arguments directly to Typst
   preview   Preview a specified file. Runs `watch`, writing output to `/tmp/` and opening it in the default viewer
-  discover  Discover installed Typst binaries
-  list      List discovered binaries
+  discover  (Re-) Discover installed Typst binaries
+  list      Information on previously discovered binaries
   help      Print this message or the help of the given subcommand(s)
 
 Arguments:
@@ -35,3 +35,5 @@ env = { TYPST_FEATURES = "html,a11y-extras" }
 "/home/cady/.local/bin/typst-debug" = "debug"
 "/home/cady/.local/bin/typst-release" = "release"
 ```
+
+A note on the fish (i don't use anything else soo 😅) completions: Because typface allows directly specifying a file to run, the initial suggestion will be quite littered. To surpress this, append `complete -c typface -n "__fish_typface_needs_command" -f` to the rules output by the build script.
