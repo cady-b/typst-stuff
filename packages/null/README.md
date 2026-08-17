@@ -1,5 +1,10 @@
 A thin, opinionated wrapper around [`zero`](https://typst.app/universe/package/zero), providing some functionality from the now unmaintained [`metro`](https://typst.app/universe/package/metro) package that I miss; because `zero.zi` wasn't quite what I needed for my documents (that is a great alternative for when this package starts to fall apart though).
 
+> [!NOTE]
+> As of [v0.7.0](https://github.com/Mc-Zen/zero/releases/tag/v0.7.0) (August 12, 2026), `zero` has native support for writing quantities in-place with `quan`. This makes a good chunk of this package obsolete, but some may still prefer `null`'s syntax or have the need to globally define units that can be used in composition.
+
+---
+
 Made for stuff like this:
 ```typ
 #import "@local/null:0.1.0": *
