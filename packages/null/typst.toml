@@ -3,4 +3,5 @@ name = "null"
 version = "0.2.0"
 entrypoint = "src/lib.typ"
 authors = ["Liara Badermann <@cady-b>"]
+license = "MIT"
 description = "practical number formatting"
