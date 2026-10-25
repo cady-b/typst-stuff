@@ -9,7 +9,8 @@
     if height == auto { height = width }
     if width == auto { width = height }
 
-    // if neither is given, default to A4: https://github.com/typst/typst/blob/de6f4009/crates/typst-layout/src/pages/run.rs#L115
+    // if neither is given, default to A4:
+    // https://github.com/typst/typst/blob/de6f4009/crates/typst-layout/src/pages/run.rs#L115
     if (height, width) == (auto, auto) {
       height = 297.0mm
       width = 210.0mm
@@ -53,7 +54,8 @@
     let left = make-side("left", "x", pw)
     let right = make-side("right", "x", pw)
 
-    // handle binding (Typst would panic if there are conflicts with left / right, so we can unconditionally overwrite)
+    // handle binding (Typst would panic if there are conflicts with
+    // left / right, so we can unconditionally overwrite)
 
     let binding = calc.even(here().page())
     let has(v) = not margin.at(v, default: none) in (none, auto)

@@ -1,5 +1,14 @@
-// This will work in many cases but isn't guaranteed to; some `content` is impossible to transformed into a string (e.g. those retrieved from `context` blocks).
-// In terms of attribution, one original author of such a function, according to https://sitandr.github.io/typst-examples-book/book/typstonomicon/extract_plain_text.html, is ntjess; the tools4typsts (t4t) package also has similar utilities. Many will have their own growing in their utils.
+// This will work in many cases but isn't guaranteed to; some `content` doesn't
+// have a textual meaning or is impossible to turn back into a string (e.g.
+// those retrieved from `context`). You'll likely wish to customize it for your
+// specific use case.
+//
+// Maintaining a line of attribution is difficult for such an ubiquitous routine
+// but according to https://sitandr.github.io/typst-examples-book/book/typstonomicon/extract_plain_text.html
+// one original author of such a function is ntjess; the tools4typsts package
+// (`t4t` on Universe) also has similar utilities. This version is inspired by
+// the many questions about stringification posted to the Typst support channels
+// and currently maintained by me (Liara).
 #let to-string(it, use-alt: true, use-repr: false) = {
   let t = type(it)
 

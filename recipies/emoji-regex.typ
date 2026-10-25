@@ -16,5 +16,7 @@
   "\x{FE0E}?"
 }): it => {
   if it.text.codepoints().last(default: "") == "\u{fe0e}" { return it; }
-  text(font: scheme.font.emoji, size: .8em, top-edge: .6em, it)
+
+  // or however you wish to handle them
+  text(font: "Twemoji", size: .8em, top-edge: .6em, it)
 }
